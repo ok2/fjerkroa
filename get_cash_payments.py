@@ -19,7 +19,7 @@ res = getattr(requests, method)(url,
                                 params = {'startDate': start_date})
 data = json.loads(res.text)
 full_amount = decimal.Decimal(0)
-print("IN KASSE:", "%6.2f" % prev_amount)
+print(start_date, "IN KASSE:", "%6.2f" % prev_amount)
 for purchase in data['purchases']:
     cash = False;
     date_created = datetime.strptime(purchase['created'].replace('+0000', ''), '%Y-%m-%dT%H:%M:%S.%f').strftime('%Y-%m-%d %H:%M')
