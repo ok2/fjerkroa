@@ -22,8 +22,8 @@
                   v-on:click="markDone">
             <div class="row">
               <div class="col-sm-2 h3" style="text-align: left;">{{ getTS(purchase.ts) }}</div>
-              <div class="col-sm h2" style="text-align: left;">{{ purchase.name }}</div>
-              <div class="col-sm-2 h3" style="text-align: right;" v-if="purchase.done">{{ getTS(purchase.done) }}</div>
+              <div class="col-sm h2" style="text-align: left;">{{ purchase.name }}<span v-if="purchase.prodquant > 1">&nbsp;&nbsp;&nbsp;<sup class="h5">{{ purchase.prodnum }}/{{ purchase.prodquant }}<sub>{{ purchase.setletter }}</sub></sup></span></div>
+              <div class="col-sm-2 h3" style="text-align: right;"><div v-if="purchase.done">{{ getTS(purchase.done) }}</div></div>
             </div>
           </button>
         </div>
@@ -33,7 +33,7 @@
       var dataReload = null;
       function dataReloadHandler(self, r) {
           for(var i = 0; i < r.length; i++) {
-              var purchase_id = r[i].purchase + "-" + r[i].product;
+              var purchase_id = r[i].purchase + "-" + r[i].product + "-" + r[i].setnum + "-" + r[i].num;
               if (!(purchase_id in self.purchases)) {
                   self.$set(self.purchases, purchase_id,
                             { purchase_id: purchase_id,
@@ -41,6 +41,12 @@
                               name: r[i].name,
                               ts: new Date(r[i].ts),
                               done: null,
+                              setnum: r[i].setnum,
+                              setletter: r[i].setletter,
+                              num: r[i].num,
+                              quantity: r[i].quantity,
+                              prodnum: r[i].prodnum,
+                              prodquant: r[i].prodquant,
                               done_counter: 0});
               }
           }
