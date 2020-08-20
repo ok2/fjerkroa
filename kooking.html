@@ -32,6 +32,7 @@
     <script>
       var dataReload = null;
       function dataReloadHandler(self, r) {
+          var changed = false;
           for(var i = 0; i < r.length; i++) {
               var purchase_id = r[i].purchase + "-" + r[i].product + "-" + r[i].setnum + "-" + r[i].num;
               if (!(purchase_id in self.purchases)) {
@@ -48,8 +49,10 @@
                               prodnum: r[i].prodnum,
                               prodquant: r[i].prodquant,
                               done_counter: 0});
+                  changed = true;
               }
           }
+          if (changed) self.$forceUpdate();
           setTimeout(dataReload, 1000);
       }
       var app = new Vue({ 
@@ -79,7 +82,25 @@
               dataReload = function() {
                   $.getJSON("kooking.data", function(r) { dataReloadHandler(self, r); });
               };
+              if (localStorage.getItem('purchases')) {
+                  var purchases = JSON.parse(localStorage.getItem('purchases'));
+                  for(var n in purchases) {
+                      purchases[n].ts = new Date(purchases[n].ts);
+                      if (purchases[n].done != null)
+                          purchases[n].done = new Date(purchases[n].done);
+                  }
+                  this.purchases = purchases;
+              }
               dataReload();
+              self.$forceUpdate();
+          },
+          watch: {
+              purchases: {
+                  handler() {
+                      localStorage.setItem('purchases', JSON.stringify(this.purchases));
+                  },
+                  deep: true,
+              },
           },
           methods: {
               markDone: function(event) {

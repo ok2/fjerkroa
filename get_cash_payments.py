@@ -3,12 +3,16 @@ from pprint import pprint as pp
 import requests, json, sys, decimal
 from datetime import datetime, timedelta
 
-if len(sys.argv) != 3:
-    sys.stderr.write('Usage: %s <days> <previous amount>\n')
+if len(sys.argv) != 11:
+    sys.stderr.write('Usage: %s <days> <previous amount> <500> <200> <100> <50> <20> <10> <5> <1>\n')
     sys.exit(1)
 access_token = get_access_token()
 offset = int(sys.argv[1])
 prev_amount = decimal.Decimal(sys.argv[2])
+cash_types = [500, 200, 100, 50, 20, 10, 5, 1]
+cash_amount = decimal.Decimal(0)
+for cash_str in sys.argv[3:]:
+    cash_amount += decimal.Decimal(cash_str) * cash_types.pop(0)
 start_date = (datetime.now() - timedelta(days = offset)).strftime('%Y-%m-%d')
 method = 'get'
 server = 'purchase'
@@ -18,11 +22,13 @@ res = getattr(requests, method)(url,
                                 headers = {'Authorization': 'Bearer %s' % access_token},
                                 params = {'startDate': start_date})
 data = json.loads(res.text)
+last_date_created = None
 full_amount = decimal.Decimal(0)
-print(start_date, "IN KASSE:", "%6.2f" % prev_amount)
 for purchase in data['purchases']:
     cash = False;
-    date_created = datetime.strptime(purchase['created'].replace('+0000', ''), '%Y-%m-%dT%H:%M:%S.%f').strftime('%Y-%m-%d %H:%M')
+    timestamp = datetime.strptime(purchase['created'].replace('+0000', ''), '%Y-%m-%dT%H:%M:%S.%f')
+    date_created = timestamp.strftime('%Y-%m-%d')
+    time_created = timestamp.strftime('%H:%M')
     amount = decimal.Decimal(purchase['amount']);
     handout = decimal.Decimal(0)
     change = decimal.Decimal(0)
@@ -32,11 +38,22 @@ for purchase in data['purchases']:
             handout += payment['attributes']['handedAmount']
             if 'changeAmount' in payment['attributes']:
                 change += payment['attributes']['changeAmount']
-    if cash:
+    if cash and amount > 0:
+        if last_date_created != date_created and (full_amount > 0 or last_date_created is None):
+            if last_date_created is not None:
+                print("SUM AMOUNT:", "%7.0f" % (full_amount / 100))
+                print("OUT KASSE: ", "%7.0f" % (prev_amount + (full_amount / 100)), "\n")
+            prev_amount = prev_amount + (full_amount/100)
+            print(date_created, "IN KASSE:", "%7.0f" % prev_amount)
+            full_amount = decimal.Decimal(0)
+            last_date_created = date_created
         full_amount += amount
-        print("%s % 7s % 7s % 7s" % (date_created,
-                                     "%6.2f" % (amount / 100),
-                                     "%6.2f" % (handout / 100),
-                                     "%6.2f" % (change / 100)))
-print("SUM AMOUNT:", "%6.2f" % (full_amount / 100))
-print("OUT KASSE:", "%6.2f" % (prev_amount + (full_amount / 100)))
+        print("%s %s % 8s % 8s % 8s" % (date_created, time_created,
+                                        "%7.0f" % (amount / 100),
+                                        "%7.0f" % (handout / 100),
+                                        "%7.0f" % (change / 100)))
+print("SUM AMOUNT:", "%7.0f" % (full_amount / 100))
+new_amount = prev_amount + (full_amount / 100)
+print("OUT KASSE: ", "%7.0f" % new_amount)
+print("\nREAL STATE:", "%7.0f" % cash_amount)
+print("DIFFERENCE:", "%7.0f" % (cash_amount - new_amount))
