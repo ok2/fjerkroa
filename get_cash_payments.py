@@ -1,6 +1,6 @@
 from utils import *
 from pprint import pprint as pp
-import requests, json, sys, decimal
+import requests, json, sys, decimal, pytz
 from datetime import datetime, timedelta
 
 if len(sys.argv) != 11:
@@ -18,6 +18,7 @@ method = 'get'
 server = 'purchase'
 path = 'purchases/v2'
 url = 'https://%s.izettle.com/%s' % (server, path)
+timezone = pytz.timezone('Europe/Oslo')
 res = getattr(requests, method)(url,
                                 headers = {'Authorization': 'Bearer %s' % access_token},
                                 params = {'startDate': start_date})
@@ -26,7 +27,8 @@ last_date_created = None
 full_amount = decimal.Decimal(0)
 for purchase in data['purchases']:
     cash = False;
-    timestamp = datetime.strptime(purchase['created'].replace('+0000', ''), '%Y-%m-%dT%H:%M:%S.%f')
+    timestamp = datetime.strptime(purchase['created'], '%Y-%m-%dT%H:%M:%S.%f%z')
+    timestamp = timestamp.astimezone(timezone)
     date_created = timestamp.strftime('%Y-%m-%d')
     time_created = timestamp.strftime('%H:%M')
     amount = decimal.Decimal(purchase['amount']);
