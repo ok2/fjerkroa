@@ -74,7 +74,7 @@ def kooking_purchases(purchases_list):
                                 'name': product['name']})
     return ret
 
-def kooking_service(out_file, offset = 0):
+def kooking_service(out_file, offset = 2):
     last_token, last_purchases = None, None
     while True:
         try:
