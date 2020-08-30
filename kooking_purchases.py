@@ -88,6 +88,7 @@ def kooking_service(out_file, offset = 2):
             os.rename(out_file + '.tmp', out_file)
         except Exception as err:
             print(time.asctime(), repr(err))
+        sys.stdout.flush()
         time.sleep(5)
 
 if __name__ == '__main__':

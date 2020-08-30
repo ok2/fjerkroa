@@ -18,7 +18,7 @@
                   class="container-fluid btn"
                   v-bind:id="purchase.purchase_id"
                   v-bind:class="{ 'btn-primary': purchase.done == null, 'btn-secondary': purchase.done != null }"
-                  v-if="purchase.done_counter < 2"
+                  v-if="purchase.done_counter < 3"
                   v-on:click="markDone">
             <div class="row">
               <div class="col-sm-2 h3" style="text-align: left;" v-bind:title="purchase.ts">{{ getTS(purchase.ts) }}</div>
@@ -74,11 +74,11 @@
                   }
                   ret.sort(function(a, b) { return a.ts < b.ts; });
                   var done_counter = 0;
-                  for(var i = 0; i < ret.length; i++) {
+                  for(var i = ret.length-1; i >= 0; i--) {
                       if (ret[i].done != null) {
-                          ret[i].done_counter = done_counter;
                           done_counter++;
-                      }
+                          ret[i].done_counter = done_counter;
+                      } else { ret[i].done_counter = 0; }
                   }
                   return ret;
               },
