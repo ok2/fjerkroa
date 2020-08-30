@@ -3,31 +3,37 @@ from pprint import pprint as pp
 import requests, json, sys, decimal, pytz
 from datetime import datetime, timedelta
 
-if len(sys.argv) != 11:
-    sys.stderr.write('Usage: %s <days> <previous amount> <500> <200> <100> <50> <20> <10> <5> <1>\n')
+timezone = pytz.timezone('Europe/Oslo')
+if len(sys.argv) != 13:
+    sys.stderr.write('Usage: %s <offset> <days> <previous amount> <500> <200> <100> <50> <20> <10> <5> <1> <removed>\n')
     sys.exit(1)
 access_token = get_access_token()
 offset = int(sys.argv[1])
-prev_amount = decimal.Decimal(sys.argv[2])
-cash_types = [500, 200, 100, 50, 20, 10, 5, 1]
+days_number = int(sys.argv[2])
+prev_amount = decimal.Decimal(sys.argv[3])
+removed = decimal.Decimas(sys.argv[12])
+cash_types = [500, 200, 100, 50, 20, 10, 5, 1, 1]
 cash_amount = decimal.Decimal(0)
-for cash_str in sys.argv[3:]:
+for cash_str in sys.argv[4:]:
     cash_amount += decimal.Decimal(cash_str) * cash_types.pop(0)
-start_date = (datetime.now() - timedelta(days = offset)).strftime('%Y-%m-%d')
+start_date = (datetime.now().replace(tzinfo = timezone) - timedelta(days = offset)).strftime('%Y-%m-%d')
+stop_date = datetime.now().replace(tzinfo = timezone) - timedelta(days = offset) + timedelta(days = days_number)
 method = 'get'
 server = 'purchase'
 path = 'purchases/v2'
 url = 'https://%s.izettle.com/%s' % (server, path)
-timezone = pytz.timezone('Europe/Oslo')
 res = getattr(requests, method)(url,
                                 headers = {'Authorization': 'Bearer %s' % access_token},
                                 params = {'startDate': start_date})
 data = json.loads(res.text)
 last_date_created = None
 full_amount = decimal.Decimal(0)
+to_break = False
 for purchase in data['purchases']:
     cash = False;
-    timestamp = datetime.strptime(purchase['created'], '%Y-%m-%dT%H:%M:%S.%f%z')
+    try: timestamp = datetime.strptime(purchase['created'], '%Y-%m-%dT%H:%M:%S.%f%z')
+    except: timestamp = datetime.strptime(purchase['created'], '%Y-%m-%dT%H:%M:%S%z')
+    if timestamp > stop_date: continue
     timestamp = timestamp.astimezone(timezone)
     date_created = timestamp.strftime('%Y-%m-%d')
     time_created = timestamp.strftime('%H:%M')
@@ -57,5 +63,5 @@ for purchase in data['purchases']:
 print("SUM AMOUNT:", "%7.0f" % (full_amount / 100))
 new_amount = prev_amount + (full_amount / 100)
 print("OUT KASSE: ", "%7.0f" % new_amount)
-print("\nREAL STATE:", "%7.0f" % cash_amount)
+print("\nREAL STATE:", "%7.0f-%7.0f=%7.0f" % (cash_amount, removed, cash_amount-removed))
 print("DIFFERENCE:", "%7.0f" % (cash_amount - new_amount))
