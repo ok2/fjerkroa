@@ -11,7 +11,7 @@ access_token = get_access_token()
 offset = int(sys.argv[1])
 days_number = int(sys.argv[2])
 prev_amount = decimal.Decimal(sys.argv[3])
-removed = decimal.Decimas(sys.argv[12])
+removed = decimal.Decimal(sys.argv[12])
 cash_types = [500, 200, 100, 50, 20, 10, 5, 1, 1]
 cash_amount = decimal.Decimal(0)
 for cash_str in sys.argv[4:]:
