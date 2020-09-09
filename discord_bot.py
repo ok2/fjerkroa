@@ -35,8 +35,8 @@ async def on_ready():
     while purchases_task_created == old_purchases_task_created:
         try:
             kooking_data = kooking_purchases(get_purchases())
-            with open(out_file + '.tmp', 'w') as fd:
-                fd.write(json.dumps(kooking_data))
+            with open(out_file + '.tmp', 'w', encoding = 'utf-8') as fd:
+                json.dump(kooking_data, fd, ensure_ascii = False)
             os.rename(out_file + '.tmp', out_file)
             for purchase in kooking_data:
                 if purchase['purchase'] not in printed_purchases:
@@ -44,7 +44,16 @@ async def on_ready():
                         try: ts = datetime.strptime(purchase['ts'], '%Y-%m-%dT%H:%M:%S.%f%z').strftime('%H:%M')
                         except:
                             ts = datetime.strptime(purchase['ts'], '%Y-%m-%dT%H:%M:%S%z').strftime('%H:%M')
-                        await channel.send(f"{ts} {purchase['name']} count:{purchase['quantity']}", delete_after = 60*60)
+                        if len(purchase.get('comment', '')) > 0:
+                            comment = f", {purchase['comment']}"
+                        else: comment = ''
+                        if len(purchase.get('description', '')) > 0:
+                            description = f" ({purchase['description']})"
+                        else: description = ''
+                        if len(purchase.get('variant_name', '')) > 0:
+                            variant = f":{purchase['variant_name']}"
+                        else: variant = ''
+                        await channel.send(f"{ts} {purchase['name']}{variant}{comment}{description} count:{purchase['quantity']}", delete_after = 60*60)
                     except Exception as err:
                         print(time.asctime(), 'ERROR:', repr(err), purchase['ts'])
                         traceback.print_exc()

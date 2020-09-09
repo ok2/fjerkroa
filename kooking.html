@@ -21,9 +21,17 @@
                   v-if="purchase.done_counter < 3"
                   v-on:click="markDone">
             <div class="row">
-              <div class="col-sm-2 h3" style="text-align: left;" v-bind:title="purchase.ts">{{ getTS(purchase.ts) }}</div>
-              <div class="col-sm h2" style="text-align: left;">{{ purchase.name }}<span v-if="purchase.prodquant > 1">&nbsp;&nbsp;&nbsp;<sup class="h5">{{ purchase.prodnum }}/{{ purchase.prodquant }}<sub>{{ purchase.setletter }}</sub></sup></span></div>
-              <div class="col-sm-2 h3" style="text-align: right;"><div v-if="purchase.done" v-bind:title="purchase.done">{{ getTS(purchase.done) }}</div></div>
+              <div class="col-sm-2 h4" style="text-align: left;" v-bind:title="purchase.ts">{{ getTS(purchase.ts) }}</div>
+              <div class="col-sm h2" style="text-align: left;">
+		<span>
+		  <div>{{ purchase.name }}<span v-if="purchase.prodquant > 1">&nbsp;&nbsp;&nbsp;<sup class="h5">{{ purchase.prodnum }}/{{ purchase.prodquant }}<sub>{{ purchase.setletter }}</sub></sup></span></div>
+		  <div v-if="purchase.variant" style="font-size: 20px;">{{ purchase.variant }}</div>
+		  <div class="h4" v-if="purchase.comment" style="font-size: 20px;">{{ purchase.comment }}</div>
+		</span>
+	      </div>
+              <div class="col-sm-2 h5" style="text-align: right;">
+		<div v-if="purchase.done" v-bind:title="purchase.done">{{ getTS(purchase.done) }}</div>
+	      </div>
             </div>
           </button>
         </div>
@@ -40,6 +48,7 @@
                             { purchase_id: purchase_id,
                               product_id: r[i].product,
                               name: r[i].name,
+			      variant: r[i].variant_name,
                               ts: new Date(r[i].ts),
                               done: null,
                               setnum: r[i].setnum,
@@ -48,9 +57,19 @@
                               quantity: r[i].quantity,
                               prodnum: r[i].prodnum,
                               prodquant: r[i].prodquant,
+                              description: r[i].description,
+                              comment: r[i].comment,
                               done_counter: 0});
                   changed = true;
-              }
+              } else if(self.purchases[purchase_id].name != r[i].name) {
+		  self.$set(self.purchases[purchase_id], 'name', r[i].name);
+              } else if(self.purchases[purchase_id].description != r[i].description) {
+		  self.$set(self.purchases[purchase_id], 'description', r[i].description);
+              } else if(self.purchases[purchase_id].comment != r[i].comment) {
+		  self.$set(self.purchases[purchase_id], 'comment', r[i].comment);
+              } else if(self.purchases[purchase_id].variant != r[i].variant_name) {
+		  self.$set(self.purchases[purchase_id], 'variant', r[i].variant_name);
+	      }
               var today = new Date();
               for (var n in self.purchases) {
                   if (Math.abs(today - self.purchases[n].ts) > 259200000) { /* > 3 days */

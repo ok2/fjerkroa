@@ -26,12 +26,9 @@ def print_purchases(purchases_list):
         for product in purchase['products']:
             if 'productUuid' in product and product['productUuid'] in products_to_display:
                 timestamp = datetime.strptime(purchase['timestamp'], '%Y-%m-%dT%H:%M:%S.%f%z')
-                ts = timestamp.astimezone(timezone).isoformat()
-                ret.append({'ts': ts,
-                            'purchase': purchase['purchaseUUID'],
-                            'product': product['productUuid'],
-                            'name': product['name']})
+                purchase['timestamp'] = timestamp.astimezone(timezone).isoformat()
+                ret.append(purchase)
     return ret
                 
 if __name__ == '__main__':
-    print(json.dumps(print_purchases(purchases_list)))
+    pp(print_purchases(purchases_list))

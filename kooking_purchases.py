@@ -16,7 +16,8 @@ products_to_display = {'b845d390-a4f8-11ea-8f9b-5ca8cba5baac',
                        '49ba53c0-1cf3-11ea-a453-0cdfacad4f21',
                        '636cd950-1cf3-11ea-83fa-6c8442b24f2a',
                        '90b43020-1cf3-11ea-8616-51cbb4a16783',
-                       'ae158ce0-1cf3-11ea-a579-32cfd65eab6b'}
+                       'ae158ce0-1cf3-11ea-a579-32cfd65eab6b',
+                       '0bf4d9c0-d6fc-11ea-ba2d-82f22241f0cf'}
 
 try: out_file = sys.argv[1]
 except: out_file = 'kooking.data'
@@ -65,12 +66,16 @@ def kooking_purchases(purchases_list):
                     ret.append({'ts': ts,
                                 'purchase': purchase['purchaseUUID'],
                                 'product': product['productUuid'],
+                                'variant': product['variantUuid'],
+                                'variant_name': product['variantName'],
                                 'setnum': setnum,
                                 'setletter': setletter,
                                 'num': num,
                                 'quantity': quantity,
                                 'prodnum': prodnum,
                                 'prodquant': prodquant,
+                                'description': product['description'],
+                                'comment': product.get('comment', ''),
                                 'name': product['name']})
     return ret
 
