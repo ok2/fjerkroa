@@ -48,7 +48,7 @@
                             { purchase_id: purchase_id,
                               product_id: r[i].product,
                               name: r[i].name,
-			      variant: r[i].variant_name,
+                              variant: r[i].variant_name,
                               ts: new Date(r[i].ts),
                               done: null,
                               setnum: r[i].setnum,
@@ -105,7 +105,7 @@
           created: function() {
               var self = this;
               dataReload = function() {
-                  $.getJSON("kooking.data", function(r) { dataReloadHandler(self, r); });
+                  $.getJSON("kooking.data", {cache: false}, function(r) { dataReloadHandler(self, r); });
               };
               if (localStorage.getItem('purchases')) {
                   var purchases = JSON.parse(localStorage.getItem('purchases'));
