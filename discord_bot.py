@@ -13,10 +13,11 @@ try: out_file = sys.argv[1]
 except: out_file = 'kooking.data'
 try: basedir = sys.argv[2]
 except: basedir = '.'
+logging_handler = logging.StreamHandler(stream = sys.stdout)
 logging.basicConfig(level = logging.INFO,
                     format = "%(asctime)s [%(levelname)s] %(message)s",
                     #handlers = [logging.FileHandler('%s/discord_bot.log' % basedir)],
-                    handlers = [logging.StreamHandler()])
+                    handlers = [logging_handler])
 
 bot = discord_cmd.Bot(command_prefix = '!', case_insensitive = True)
 re_user = re.compile(r'[<][@][!]?\s*([0-9]+)[>]')
@@ -56,15 +57,13 @@ async def on_ready():
                         else: variant = ''
                         await channel.send(f"{ts} {purchase['name']}{variant}{comment}{description} count:{purchase['quantity']}", delete_after = 60*60)
                     except Exception as err:
-                        logging.error(err, purchase['ts'])
-                        traceback.print_exc()
+                        logging.exception('Could not send the purchase message!')
                 printed_purchases.add(purchase['purchase'])
                 with open('%s/printed_purchases.tmp' % basedir, 'wb') as fd:
                     pickle.dump(printed_purchases, fd)
                 os.rename('%s/printed_purchases.tmp' % basedir, '%s/printed_purchases.dat' % basedir)
         except Exception as err:
-            logging.error(err)
-            traceback.print_exc()
+            logging.exception('Handling purchases got an error!')
         sys.stdout.flush()
         await asyncio.sleep(5)
 
@@ -89,13 +88,12 @@ async def on_message(message):
                 msg = re.sub(f'[<][@][!]? *{uid} *[>]', name, msg)
                 msg_en = re.sub(f'[<][@][!]? *{uid} *[>]', name, msg_en)
                 msg_no = re.sub(f'[<][@][!]? *{uid} *[>]', name, msg_no)
-            logging.info(msg, msg_no, msg_en)
+            logging.info(f'{msg=} {msg_no=} {msg_en=}')
             if msg_no.lower().strip() != msg.lower().strip():
                 await message.channel.send(f"{message.author.name}: {msg_no}", delete_after = 60*60, tts = ttts)
             elif msg_en.lower().strip() != msg.lower().strip():
                 await message.channel.send(f"{message.author.name}: {msg_en}", delete_after = 60*60, tts = ttts)
         except Exception as err:
-            logging.error(err)
-            traceback.print_exc()
+            logging.exception('Could not translate the message!')
 
 bot.run(botconfig.DISCORD_TOKEN)
