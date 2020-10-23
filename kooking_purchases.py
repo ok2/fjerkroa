@@ -3,20 +3,23 @@ from pprint import pprint as pp
 from datetime import datetime, timedelta
 import requests, json, sys, pytz, time, os, hashlib, string
 
-products_to_display = {'b845d390-a4f8-11ea-8f9b-5ca8cba5baac',
-                       'f13f3660-19dd-11ea-b6e8-50ad43873b88',
-                       '97673920-19de-11ea-8e77-1247b74fae1c',
-                       'bf1f4380-19df-11ea-b3a0-e478aaa6c22a',
-                       '6a51c060-19e1-11ea-aebc-960f77e91a0b',
-                       'ab248f10-19e0-11ea-90e5-e9295c94209a',
-                       '6fde1f40-19e3-11ea-b659-a2716e21a90e',
-                       '2cce79c0-1a01-11ea-be2f-cea2e83b0f02',
-                       '0be85e70-1cf3-11ea-ab6c-796ce77a8c54',
-                       '2a8b3be0-1cf3-11ea-810d-636cc28e0a01',
-                       '49ba53c0-1cf3-11ea-a453-0cdfacad4f21',
-                       '636cd950-1cf3-11ea-83fa-6c8442b24f2a',
-                       '90b43020-1cf3-11ea-8616-51cbb4a16783',
-                       'ae158ce0-1cf3-11ea-a579-32cfd65eab6b'}
+products_to_display = {
+    '0be85e70-1cf3-11ea-ab6c-796ce77a8c54',
+    '0bf4d9c0-d6fc-11ea-ba2d-82f22241f0cf',
+    '2a8b3be0-1cf3-11ea-810d-636cc28e0a01',
+    '2cce79c0-1a01-11ea-be2f-cea2e83b0f02',
+    '49ba53c0-1cf3-11ea-a453-0cdfacad4f21',
+    '636cd950-1cf3-11ea-83fa-6c8442b24f2a',
+    '6a51c060-19e1-11ea-aebc-960f77e91a0b',
+    '6fde1f40-19e3-11ea-b659-a2716e21a90e',
+    '90b43020-1cf3-11ea-8616-51cbb4a16783',
+    '97673920-19de-11ea-8e77-1247b74fae1c',
+    'ab248f10-19e0-11ea-90e5-e9295c94209a',
+    'ae158ce0-1cf3-11ea-a579-32cfd65eab6b',
+    'b845d390-a4f8-11ea-8f9b-5ca8cba5baac',
+    'bf1f4380-19df-11ea-b3a0-e478aaa6c22a',
+    'f13f3660-19dd-11ea-b6e8-50ad43873b88',
+}
 
 try: out_file = sys.argv[1]
 except: out_file = 'kooking.data'
@@ -65,12 +68,16 @@ def kooking_purchases(purchases_list):
                     ret.append({'ts': ts,
                                 'purchase': purchase['purchaseUUID'],
                                 'product': product['productUuid'],
+                                'variant': product['variantUuid'],
+                                'variant_name': product['variantName'],
                                 'setnum': setnum,
                                 'setletter': setletter,
                                 'num': num,
                                 'quantity': quantity,
                                 'prodnum': prodnum,
                                 'prodquant': prodquant,
+                                'description': product['description'],
+                                'comment': product.get('comment', ''),
                                 'name': product['name']})
     return ret
 
@@ -88,6 +95,7 @@ def kooking_service(out_file, offset = 2):
             os.rename(out_file + '.tmp', out_file)
         except Exception as err:
             print(time.asctime(), repr(err))
+        sys.stdout.flush()
         time.sleep(5)
 
 if __name__ == '__main__':
