@@ -4,8 +4,10 @@ import requests, json
 
 pages_config = (
     ('Menu', ('Mat', 'Extra')),
-    ('Barmenu', None),
-    ('Menu', ('Is', 'Drikke')),
+    ('Barmenu', ('Øl', 'Vine&ånder')),
+    ('Barmenu:Drinks', ('Drink:',)),
+    ('Menu:Is', ('Is:',)),
+    ('Menu:Drikke', ('Drikke:',)),
     ('Menu:Takeaway', ('Takeaway:',)),
 )
 
@@ -24,11 +26,14 @@ def get_subcategories(main):
             subcategory_dict[subcategory] = {'name': latex(subcategory), 'entries': []}
         subcategory = subcategory_dict[subcategory]
         if product['description'] is not None:
-            desc = '\\Expl{%s}' % latex(product['description'])
-        else: desc = ''
-        subcategory['entries'].append('\\Entry{%s%s}{%d,- kr}' % \
-                                      (latex(product['name']), desc,
-                                       product['variants'][0]['price']['amount']//100))
+            subcategory['entries'].append('\\EEntry{%s}{%d,- kr}{%s}' % \
+                                          (latex(product['name']),
+                                           product['variants'][0]['price']['amount']//100,
+                                           latex(product['description'])))
+        else:
+            subcategory['entries'].append('\\Entry{%s}{%d,- kr}' % \
+                                          (latex(product['name']),
+                                           product['variants'][0]['price']['amount']//100))
     return subcategory_dict
 
 first_page = True
@@ -45,7 +50,7 @@ for main, subs in pages_config:
 \begin{tikzpicture}
 \MyCadre{60}{8}{12}%%
 \node[text width=13cm] at (thecenter){%%
-\begin{center} \Huge Fj\ae{}rkroa \\ \LARGE %s \end{center}
+\begin{center} \Huge %s \end{center}
 \vspace{1cm}
 ''' % latex(main_name))
     first_sub = True
@@ -59,9 +64,10 @@ for main, subs in pages_config:
         if not first_sub: print('\n\\Tiret\n')
         else: first_sub = False
         print('\\begin{Group}{%s}' % latex(subcategory_name))
-        entries_list = list(sorted(subcategory['entries']))
+        entries_list = list(sorted(subcategory['entries'], key = lambda x: x.replace('EEntry', 'Entry')))
         for entry in entries_list:
-            print('%s%s' % (entry, r'' if entry == entries_list[-1] else r'\\'))
+            #print('%s%s' % (entry, r'' if entry == entries_list[-1] else r'\\'))
+            print(entry)
         print('\\end{Group}')
     print(r'''};
 \end{tikzpicture}
