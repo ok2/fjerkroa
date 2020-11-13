@@ -65,7 +65,7 @@ async def on_ready():
         except Exception as err:
             logging.exception('Handling purchases got an error!')
         sys.stdout.flush()
-        await asyncio.sleep(5)
+        await asyncio.sleep(9)
 
 @bot.event
 async def on_message(message):

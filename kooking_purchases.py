@@ -19,12 +19,19 @@ products_to_display = {
     'b845d390-a4f8-11ea-8f9b-5ca8cba5baac',
     'bf1f4380-19df-11ea-b3a0-e478aaa6c22a',
     'f13f3660-19dd-11ea-b6e8-50ad43873b88',
+
     '720e6670-25a5-11eb-9eef-d3f992a1bed8',
+    'b21ac920-25aa-11eb-9845-e37fa62ac814',
     '9acf23b0-25a5-11eb-9eef-d3f992a1bed8',
+    '2bc3a710-25ab-11eb-b727-73df053d26bf',
     'b4001d30-25a5-11eb-9eef-d3f992a1bed8',
+    '52e70800-25ab-11eb-a98b-6b6f7cc60cee',
     'c576f070-25a5-11eb-9eef-d3f992a1bed8',
+    '53eabc60-25ab-11eb-8ba3-df3fed286e08',
     'd9387700-25a5-11eb-9eef-d3f992a1bed8',
+    '562df5a0-25ab-11eb-b8e1-91fc07e1d909',
     'e97dcf20-25a5-11eb-9eef-d3f992a1bed8',
+    '571918f0-25ab-11eb-9ea1-75e42ea54798',
 }
 
 try: out_file = sys.argv[1]
@@ -67,6 +74,9 @@ def kooking_purchases(purchases_list):
         for product in purchase['products']:
             if 'productUuid' in product and product['productUuid'] in products_to_display:
                 timestamp = datetime.strptime(purchase['timestamp'], '%Y-%m-%dT%H:%M:%S.%f%z')
+                if 'category' in product:
+                    category = product['category']['name']
+                else: category = ''
                 ts = timestamp.astimezone(timezone).isoformat()
                 quantity = int(product['quantity'])
                 for num in range(quantity):
@@ -76,6 +86,7 @@ def kooking_purchases(purchases_list):
                                 'product': product['productUuid'],
                                 'variant': product['variantUuid'],
                                 'variant_name': product['variantName'],
+                                'category': category,
                                 'setnum': setnum,
                                 'setletter': setletter,
                                 'num': num,
