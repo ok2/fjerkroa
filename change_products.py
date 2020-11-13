@@ -17,6 +17,19 @@ DESCRIPTIONS = {'7f2dc940-d73f-11ea-9281-6b34ea01d17c': {'description': 'øl, sp
                 '49ba53c0-1cf3-11ea-a453-0cdfacad4f21': {'description': 'med salat og dressing'}, # hamburger
                 '90b43020-1cf3-11ea-8616-51cbb4a16783': {'description': 'med salat, dressing, bearnaise og chips'}, # schnitzel
                 '0be85e70-1cf3-11ea-ab6c-796ce77a8c54': {'description': 'med salat, dressing, bearnaise og chips'}, # biffsnadder
+
+                '720e6670-25a5-11eb-9eef-d3f992a1bed8': {'description': 'tomatsaus, salami og ost'}, # salami pizza
+                'b21ac920-25aa-11eb-9845-e37fa62ac814': {'description': 'TAKEAWAY tomatsaus, salami og ost'}, # salami pizza (takeaway)
+                '9acf23b0-25a5-11eb-9eef-d3f992a1bed8': {'description': 'tomatsaus, skinke og ost'}, # skinke pizza
+                '2bc3a710-25ab-11eb-b727-73df053d26bf': {'description': 'TAKEAWAY tomatsaus, skinke og ost'}, # skinke pizza (takeaway)
+                'b4001d30-25a5-11eb-9eef-d3f992a1bed8': {'description': 'tomatsaus, salami, skinke, sopp, knasende paprika og milde pepperoni, ost'}, # speciale pizza
+                '52e70800-25ab-11eb-a98b-6b6f7cc60cee': {'description': 'TAKEAWAY tomatsaus, salami, skinke, sopp, knasende paprika og milde pepperoni, ost'}, # speciale pizza (takeaway)
+                'c576f070-25a5-11eb-9eef-d3f992a1bed8': {'description': 'tomatsaus, med pepperoni salami og mild pepperoni'}, # diablo pizza
+                '53eabc60-25ab-11eb-8ba3-df3fed286e08': {'description': 'TAKEAWAY tomatsaus, med pepperoni salami og mild pepperoni'}, # diablo pizza (takeaway)
+                'd9387700-25a5-11eb-9eef-d3f992a1bed8': {'description': 'tomatsaus, skinke, ananas, ost'}, # hawaii pizza
+                '562df5a0-25ab-11eb-b8e1-91fc07e1d909': {'description': 'TAKEAWAY tomatsaus, skinke, ananas, ost'}, # hawaii pizza (takeaway)
+                'e97dcf20-25a5-11eb-9eef-d3f992a1bed8': {'description': 'tomatsaus, kylling, løk, ananas, paprika'}, # kylling pizza
+                '571918f0-25ab-11eb-9ea1-75e42ea54798': {'description': 'TAKEAWAY tomatsaus, kylling, løk, ananas, paprika'}, # kylling pizza (takeaway)
 }
 
 def do_changes(product, res = False):

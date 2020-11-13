@@ -4,10 +4,12 @@ import requests, json
 
 pages_config = (
     ('Menu', ('Mat', 'Extra')),
+    ('Menu:Pizza', ('Pizza:',)),
     ('Barmenu', ('Øl', 'Vine&ånder')),
     ('Barmenu:Drinks', ('Drink:',)),
     ('Menu:Is', ('Is:',)),
     ('Menu:Drikke', ('Drikke:',)),
+    ('Menu:Takeaway pizza', ('TakeawayPizza:',)),
     ('Menu:Takeaway', ('Takeaway:',)),
 )
 
@@ -29,7 +31,7 @@ def get_subcategories(main):
             subcategory['entries'].append('\\EEntry{%s}{%d,- kr}{%s}' % \
                                           (latex(product['name']),
                                            product['variants'][0]['price']['amount']//100,
-                                           latex(product['description'])))
+                                           latex(product['description'].removeprefix('TAKEAWAY'))))
         else:
             subcategory['entries'].append('\\Entry{%s}{%d,- kr}' % \
                                           (latex(product['name']),

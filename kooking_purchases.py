@@ -19,6 +19,12 @@ products_to_display = {
     'b845d390-a4f8-11ea-8f9b-5ca8cba5baac',
     'bf1f4380-19df-11ea-b3a0-e478aaa6c22a',
     'f13f3660-19dd-11ea-b6e8-50ad43873b88',
+    '720e6670-25a5-11eb-9eef-d3f992a1bed8',
+    '9acf23b0-25a5-11eb-9eef-d3f992a1bed8',
+    'b4001d30-25a5-11eb-9eef-d3f992a1bed8',
+    'c576f070-25a5-11eb-9eef-d3f992a1bed8',
+    'd9387700-25a5-11eb-9eef-d3f992a1bed8',
+    'e97dcf20-25a5-11eb-9eef-d3f992a1bed8',
 }
 
 try: out_file = sys.argv[1]

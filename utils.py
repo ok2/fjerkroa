@@ -2,7 +2,7 @@ from config import *
 import requests, json, re
 
 def latex(s):
-    return re.sub(r'\s*&\s*', r' og ', s)
+    return re.sub(r'\s*&\s*', r' og ', s).strip()
 
 def get_access_token():
     res = requests.post('https://oauth.izettle.com/token',
