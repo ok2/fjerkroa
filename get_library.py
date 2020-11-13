@@ -14,11 +14,14 @@ def print_products(short):
             price = 0
             for variant in product['variants']:
                 price = variant['price']['amount'] / 100
-            if product['category'] is None: category = ''
-            else: category = product['category']['name']
+            if product['category'] is None:
+                category, catuuid = '', ''
+            else:
+                category = product['category']['name']
+                catuuid = product['category']['uuid']
             name = product['name']
             uuid = product['uuid']
-            print(f'{uuid} {category=} {name=} {price=}')
+            print(f'{uuid} {category=} {catuuid=} {name=} {price=}')
         else:
             pp(product)
 
