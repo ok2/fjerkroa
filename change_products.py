@@ -8,6 +8,13 @@ DESCRIPTIONS = {'7f2dc940-d73f-11ea-9281-6b34ea01d17c': {'description': 'øl, sp
                 '760545f0-d73f-11ea-9281-6b34ea01d17c': {'description': 'øl, cola'},
                 'ea7f0ac0-d73e-11ea-8772-ab6a47ea4e3f': {'description': 'vodka, piscang ambon, sprite'},
                 '533a42a0-d73f-11ea-9281-6b34ea01d17c': {'description': 'bacardi, sprite'},
+
+                '11cb92ee-26ac-11eb-8a1b-416a9fe6428f': {'description': 'kahlua, bailey\'s, grand marnier'}, # b52 shot
+                '6213d7c6-26ab-11eb-8a1b-416a9fe6428f': {'description': 'rum, ananas juice, cocos melk, cocos krem'}, # pina colada
+                '6f229d08-26ab-11eb-8a1b-416a9fe6428f': {'description': 'tequila, appelsinjuice, sirup'}, # tequila sunrise
+                'f0384f1e-26ab-11eb-8a1b-416a9fe6428f': {'description': 'white rum, drambuie, lime juice, sitron juice'}, # north pole
+                '289b1030-26ac-11eb-8a1b-416a9fe6428f': {'description': 'hot apple souce, whiskey, ananas juice'}, # hot apple sauce
+                
                 '97673920-19de-11ea-8e77-1247b74fae1c': {'description': 'med salat, dressing og chips'}, # hamburgertalerken
                 '2cce79c0-1a01-11ea-be2f-cea2e83b0f02': {'description': 'med salat og dressing'}, # hamburger
                 '6a51c060-19e1-11ea-aebc-960f77e91a0b': {'description': 'med salat, dressing, bearnaise og chips'}, # schnitzel
