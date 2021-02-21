@@ -15,7 +15,11 @@ removed = decimal.Decimal(sys.argv[12])
 cash_types = [500, 200, 100, 50, 20, 10, 5, 1, 1]
 cash_amount = decimal.Decimal(0)
 for cash_str in sys.argv[4:]:
-    cash_amount += decimal.Decimal(cash_str) * cash_types.pop(0)
+    cash_type = cash_types.pop(0)
+    if '=' in cash_str:
+        cash_type, cash_str = cash_str.split('=')
+        cash_type = int(cash_type)
+    cash_amount += decimal.Decimal(cash_str) * cash_type
 start_date = (datetime.now().replace(tzinfo = timezone) - timedelta(days = offset)).strftime('%Y-%m-%d')
 stop_date = datetime.now().replace(tzinfo = timezone) - timedelta(days = offset) + timedelta(days = days_number)
 method = 'get'
