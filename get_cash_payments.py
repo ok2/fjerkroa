@@ -4,17 +4,28 @@ import requests, json, sys, decimal, pytz
 from datetime import datetime, timedelta
 
 timezone = pytz.timezone('Europe/Oslo')
-if len(sys.argv) != 13:
+if (len(sys.argv) != 13 and len(sys.argv) != 6) \
+   or (len(sys.argv) == 6 and sys.argv[4] != '-'):
     sys.stderr.write('Usage: %s <offset> <days> <previous amount> <500> <200> <100> <50> <20> <10> <5> <1> <removed>\n')
+    sys.stderr.write('       %s <offset> <days> <previous amount> - <removed>\n')
     sys.exit(1)
 access_token = get_access_token()
-offset = int(sys.argv[1])
-days_number = int(sys.argv[2])
-prev_amount = decimal.Decimal(sys.argv[3])
-removed = decimal.Decimal(sys.argv[12])
+if len(sys.argv) == 13:
+    sys_argv = sys.argv
+else:
+    sys_argv = sys.argv[:4]
+    for line in sys.stdin.readlines():
+        line = line.strip()
+        if len(line) != 0:
+            sys_argv.append(line)
+    sys_argv.append(sys.argv[5])
+offset = int(sys_argv[1])
+days_number = int(sys_argv[2])
+prev_amount = decimal.Decimal(sys_argv[3])
+removed = decimal.Decimal(sys_argv[12])
 cash_types = [500, 200, 100, 50, 20, 10, 5, 1, 1]
 cash_amount = decimal.Decimal(0)
-for cash_str in sys.argv[4:]:
+for cash_str in sys_argv[4:]:
     cash_type = cash_types.pop(0)
     if '=' in cash_str:
         cash_type, cash_str = cash_str.split('=')
